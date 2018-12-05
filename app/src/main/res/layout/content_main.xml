@@ -9,13 +9,19 @@
     tools:context="com.zk.mytest.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <com.zk.view.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#a23eae"
+        android:gravity="center">
+
+        <com.zk.view.MyView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#ccffcc" />
+
+
+    </com.zk.view.MyLinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>
