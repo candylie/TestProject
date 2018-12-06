@@ -8,3 +8,8 @@
 .idea
 /captures
 .externalNativeBuild
+/framework/build
+/app/build
+/instantapp/build
+/mylibrary/build
+/tablemodule/build
