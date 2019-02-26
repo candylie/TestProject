@@ -11,4 +11,6 @@
     <dimen name="dp_10">10dp</dimen>
     <dimen name="def_margin">10dp</dimen>
     <dimen name="shap_corners">5dp</dimen>
+    <dimen name="tk_hq_list_fold_layout_height">38dp</dimen>
+    <dimen name="layout_split_height">0.5dp</dimen>
 </resources>

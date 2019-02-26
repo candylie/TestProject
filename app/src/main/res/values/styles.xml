@@ -17,4 +17,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!--线条颜色-->
+    <style name="layout_spilt_line_style">
+        <item name="android:background">@color/divide_line</item>
+        <item name="android:layout_height">@dimen/layout_split_height</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
 </resources>

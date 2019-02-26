@@ -1,7 +1,9 @@
 package com.zk.framework.ui
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +21,8 @@ abstract class ZBaseFragment : Fragment() {
     open var DEBUG: Boolean = true
 
     private lateinit var mFragmentName: String
+
+    protected lateinit var mActivity: Activity
 
     private var isFirstVisible: Boolean = true
     private var isFirstInvisible: Boolean = true
@@ -47,6 +51,10 @@ abstract class ZBaseFragment : Fragment() {
      */
     abstract fun getFragmentName(): String
 
+    fun findViewById(@IdRes id: Int): View? {
+        return rootView.findViewById(id)
+    }
+
     /**
      * 初始化Layout状态管理
      */
@@ -60,6 +68,11 @@ abstract class ZBaseFragment : Fragment() {
                 .setErrorLayoutClickId(R.id.tv_status_error_content)
                 .newBuilder()
         mStatusLayoutManager.showContent()
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mActivity = context as Activity;
     }
 
 
@@ -78,6 +91,27 @@ abstract class ZBaseFragment : Fragment() {
         super.onPause()
         if (userVisibleHint) {
             onUserInvisible()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (DEBUG) {
+            ZLog.e("$mFragmentName===onDestroy")
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (DEBUG) {
+            ZLog.e("$mFragmentName===onDestroyView")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        if (DEBUG) {
+            ZLog.e("$mFragmentName===onDestroyView")
         }
     }
 

@@ -34,5 +34,8 @@
     <color name="text_color_999">#999999</color>
     <color name="text_color_eee">#eeeeee</color>
 
+    <color name="divide_line">#dedede</color>
+    <color name="tk_hq_theme_window_background">#eeeeee</color>
+
 
 </resources>

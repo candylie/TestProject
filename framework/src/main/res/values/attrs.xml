@@ -115,4 +115,16 @@
     <declare-styleable name="BottomBarLayout">
         <attr name="smoothScroll" format="boolean" />
     </declare-styleable>
+
+    <!--带红点的ImageView-->
+    <declare-styleable name="BadgeImageView">
+        <!--xy轴偏移距离-->
+        <attr name="badgeXYOffSet" format="dimension" />
+        <!--缩小倍率-->
+        <attr name="badgeMagnification" format="integer" />
+        <!--指示颜色-->
+        <attr name="badgeColor" format="color|reference" />
+        <!--指数图片-->
+        <attr name="badgeIcon" format="reference" />
+    </declare-styleable>
 </resources>

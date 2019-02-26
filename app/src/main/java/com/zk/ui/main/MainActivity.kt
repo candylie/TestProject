@@ -12,6 +12,7 @@ import com.zk.framework.ui.ZBaseActivity
 import com.zk.framework.ui.ZBaseFragment
 import com.zk.mytest.R
 import com.zk.ui.home.HomePageFragment
+import com.zk.ui.home.TestFragment
 import com.zk.view.bottombar.BottomBarItem
 import com.zk.view.bottombar.BottomBarLayout
 
@@ -64,7 +65,7 @@ class MainActivity : ZBaseActivity(), BottomBarLayout.OnItemSelectedListener {
     override fun initObject() {
         mFragments = ArrayList()
         val pageFragment = HomePageFragment()
-        val testFragment = HomePageFragment()
+        val testFragment = TestFragment()
         mFragments.add(pageFragment)
         mFragments.add(testFragment)
 
