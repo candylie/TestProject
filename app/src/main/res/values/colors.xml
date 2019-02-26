@@ -3,4 +3,36 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--//测试颜色-->
+    <color name="ts1">#df9696</color>
+    <color name="ts2">#ff5353</color>
+    <color name="ts3">#c61919</color>
+    <color name="ts4">#a7b66f</color>
+    <color name="ts5">#d3ff2d</color>
+    <color name="ts6">#41ce0e</color>
+    <color name="ts7">#7fcbec</color>
+    <color name="ts8">#259fec</color>
+    <color name="ts9">#0b74f5</color>
+    <color name="ts10">#b964ce</color>
+    <color name="ts11">#962ab1</color>
+    <color name="ts12">#64077c</color>
+
+
+    <color name="theme_color">#39dcce</color>
+    <color name="white">#feffffff</color>
+    <color name="black">#000000</color>
+
+    <color name="thin_line_color1">#686868</color><!--细线颜色-->
+    <color name="thin_line_color2">#a3a2a2</color><!--细线颜色-->
+    <color name="thick_line_color1">#eeeeee</color><!--粗线颜色-->
+
+
+    <color name="text_color_000">#000000</color>
+    <color name="text_color_333">#333333</color>
+    <color name="text_color_666">#666666</color>
+    <color name="text_color_999">#999999</color>
+    <color name="text_color_eee">#eeeeee</color>
+
+
 </resources>

@@ -1,6 +1,9 @@
 package com.zk.view
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -13,16 +16,45 @@ import android.widget.TextView
  */
 class MyView : TextView {
     private val TAG: String = "ZK_MyView"
+    lateinit var xpaint: Paint
+    lateinit var ypaint: Paint
 
 
-    constructor(context: Context?) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context?) : super(context) {
+        initPaint()
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        initPaint()
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        initPaint()
+    }
+
+
+    fun initPaint() {
+        xpaint = Paint()
+        ypaint = Paint()
+        xpaint.strokeWidth = 2f
+        ypaint.strokeWidth = 2f
+        xpaint.color = Color.RED
+        xpaint.color = Color.GREEN
+    }
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
         Log.d(TAG, "dispatchTouchEvent==$event")
         val b = super.dispatchTouchEvent(event)
         return b
+    }
+
+    override fun draw(canvas: Canvas?) {
+        super.draw(canvas)
+        canvas?.drawLine(0f, 0f, width.toFloat(), 2f, xpaint)
+        canvas?.drawLine(0f, 0f, 2f, height.toFloat(), xpaint)
+        canvas?.translate(50f, 50f)
+        canvas?.drawLine(0f, 0f, width.toFloat(), 2f, xpaint)
+        canvas?.drawLine(0f, 0f, 2f, height.toFloat(), xpaint)
     }
 
 
