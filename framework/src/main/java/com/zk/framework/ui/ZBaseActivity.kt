@@ -5,26 +5,37 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import butterknife.ButterKnife
+import com.zk.framework.ui.util.status.StatusLayoutManager
 import com.zk.framework.util.log.ZLog
+import test.zk.com.framwork.R
 
 /**
  * -基础activity
  * @author 张科
  * @date 2019/2/25.
  */
-abstract class ZBaseActivity : AppCompatActivity() {
+abstract class ZBaseActivity : AppCompatActivity(), UIInitCallBack {
     val DEBUG: Boolean = true
 
     private var mActivityName: String = ""
-
+    private lateinit var statusLayoutManager: StatusLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val rootView = LayoutInflater.from(this).inflate(getLayoutId(), null)
-        setContentView(rootView)
+        statusLayoutManager = StatusLayoutManager.Builder(this)
+                .setContentLayout(getLayoutId())
+                .setEmptyLayout(R.layout.layout_status_layout_manager_empty)
+                .setErrorLayout(R.layout.layout_status_layout_manager_error)
+                .setLoadingLayout(R.layout.layout_status_layout_manager_loading)
+                .setEmptyLayoutClickId(R.id.bt_status_empty_click)
+                .setErrorLayoutClickId(R.id.tv_status_error_content)
+                .newBuilder()
+        setContentView(statusLayoutManager.getRootLayout())
+        statusLayoutManager.showContent()
+        ButterKnife.bind(this)
         mActivityName = getActivityName()
         setStatusBar()
         initIntent()
@@ -34,37 +45,11 @@ abstract class ZBaseActivity : AppCompatActivity() {
         initData()
     }
 
-    abstract fun getLayoutId(): Int
-
     /**
      * 获取界面名称
      */
     abstract fun getActivityName(): String
 
-    /**
-     * 初始化intent
-     */
-    abstract fun initIntent()
-
-    /**
-     * 查找View
-     */
-    abstract fun findView()
-
-    /**
-     * 初始化对象
-     */
-    abstract fun initObject()
-
-    /**
-     * 初始化view
-     */
-    abstract fun initView()
-
-    /**
-     * 初始化数据
-     */
-    abstract fun initData()
 
     /**
      * 设置透明状态栏
@@ -81,6 +66,22 @@ abstract class ZBaseActivity : AppCompatActivity() {
             val localLayoutParams = window.attributes
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS or localLayoutParams.flags)
         }
+    }
+
+    override fun showContentView() {
+        statusLayoutManager.showContent()
+    }
+
+    override fun showErrorLayout() {
+        statusLayoutManager.showErrorLayout()
+    }
+
+    override fun showEmptyLayout() {
+        statusLayoutManager.showEmptyLayout()
+    }
+
+    override fun showLoading() {
+        statusLayoutManager.showLoading()
     }
 
     override fun onStart() {

@@ -17,7 +17,7 @@ public class WeatherMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.weather_activity_main);
+        setContentView(R.layout.layout_weather_activity_main);
 
 
     }

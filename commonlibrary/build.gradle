@@ -27,8 +27,13 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:28.0.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    compile 'com.github.the-pig-of-jungle.smart-show:toast:2.6.2'
+    compile 'com.github.the-pig-of-jungle.smart-show:dialog:2.6.2'
+    compile('com.github.the-pig-of-jungle.smart-show:topbar:2.6.2') {
+        exclude group: 'com.android.support'
+    }
+
 }
 repositories {
     mavenCentral()

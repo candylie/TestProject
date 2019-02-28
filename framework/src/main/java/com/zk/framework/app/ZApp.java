@@ -37,7 +37,7 @@ public class ZApp extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        callbacks.relese();
+        callbacks.release();
         callbacks = null;
     }
 
@@ -89,7 +89,7 @@ public class ZApp extends Application {
             return nowActivity;
         }
 
-        void relese() {
+        void release() {
             nowActivity = null;
         }
     }

@@ -5,12 +5,17 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
     <dimen name="sp_6">6sp</dimen>
     <dimen name="sp_9">9sp</dimen>
     <dimen name="sp_10">10sp</dimen>
     <dimen name="dp_10">10dp</dimen>
+    <!--//默认边距-->
     <dimen name="def_margin">10dp</dimen>
-    <dimen name="shap_corners">5dp</dimen>
-    <dimen name="tk_hq_list_fold_layout_height">38dp</dimen>
+    <!--//圆角弧度-->
+    <dimen name="shape_corners">5dp</dimen>
+    <!--//分割线高度-->
     <dimen name="layout_split_height">0.5dp</dimen>
+    <!--ActionBar高度-->
+    <dimen name="action_bar_height">48dp</dimen>
 </resources>

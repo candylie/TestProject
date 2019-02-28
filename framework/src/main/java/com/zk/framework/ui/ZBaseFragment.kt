@@ -8,6 +8,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import butterknife.ButterKnife
+import butterknife.Unbinder
+import com.zk.framework.ui.mvp.ZBasePresenter
+import com.zk.framework.ui.mvp.ZBaseView
 import com.zk.framework.ui.util.status.StatusLayoutManager
 import com.zk.framework.util.log.ZLog
 import test.zk.com.framwork.R
@@ -17,10 +21,10 @@ import test.zk.com.framwork.R
  * @author 张科
  * @date 2019/2/23.
  */
-abstract class ZBaseFragment : Fragment() {
+abstract class ZBaseFragment : Fragment(), ZBaseView<ZBasePresenter>, UIInitCallBack {
     open var DEBUG: Boolean = true
 
-    private lateinit var mFragmentName: String
+    private var mFragmentName: String = "--"
 
     protected lateinit var mActivity: Activity
 
@@ -31,12 +35,14 @@ abstract class ZBaseFragment : Fragment() {
     private lateinit var rootView: View
     protected lateinit var mStatusLayoutManager: StatusLayoutManager
 
+    private lateinit var mUnbidden: Unbinder
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         initLayoutManger()
         rootView = mStatusLayoutManager.getRootLayout()
+        mUnbidden = ButterKnife.bind(this, rootView)
         mFragmentName = getFragmentName()
-        initBundle()
+        initIntent()
         findView()
         initObject()
         initView()
@@ -44,7 +50,20 @@ abstract class ZBaseFragment : Fragment() {
         return rootView
     }
 
-    abstract fun getLayoutId(): Int
+    override fun initIntent() {
+    }
+
+    override fun findView() {
+    }
+
+    override fun initObject() {
+    }
+
+    override fun initView() {
+    }
+
+    override fun initData() {
+    }
 
     /**
      * 获取Fragment的名称
@@ -68,6 +87,26 @@ abstract class ZBaseFragment : Fragment() {
                 .setErrorLayoutClickId(R.id.tv_status_error_content)
                 .newBuilder()
         mStatusLayoutManager.showContent()
+    }
+
+    override fun getAttachAcitvity(): Activity {
+        return mActivity
+    }
+
+    override fun showContentView() {
+        mStatusLayoutManager.showContent()
+    }
+
+    override fun showErrorLayout() {
+        mStatusLayoutManager.showErrorLayout()
+    }
+
+    override fun showEmptyLayout() {
+        mStatusLayoutManager.showEmptyLayout()
+    }
+
+    override fun showLoading() {
+        mStatusLayoutManager.showLoading()
     }
 
     override fun onAttach(context: Context?) {
@@ -106,6 +145,7 @@ abstract class ZBaseFragment : Fragment() {
         if (DEBUG) {
             ZLog.e("$mFragmentName===onDestroyView")
         }
+        mUnbidden.unbind()
     }
 
     override fun onDetach() {
@@ -188,32 +228,4 @@ abstract class ZBaseFragment : Fragment() {
             ZLog.e("$mFragmentName===onUserVisible")
         }
     }
-
-
-    /**
-     * 初始化bundle数据
-     */
-    abstract fun initBundle()
-
-    /**
-     * 查找view
-     */
-    abstract fun findView()
-
-    /**
-     * 初始化对象
-     */
-    abstract fun initObject()
-
-    /**
-     * 初始化view
-     */
-    abstract fun initView()
-
-    /**
-     * 初始化数据
-     */
-    abstract fun initData()
-
-
 }

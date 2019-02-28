@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/common_activity_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:background="@color/ts4">
+
+        <ImageView
+            android:id="@+id/common_activity_back_iv"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:padding="10dp"
+            android:src="@drawable/icon_back"
+            tools:ignore="RtlHardcoded" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/common_activity_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/ts2"
+                android:textSize="@dimen/sp_14" />
+
+            <TextView
+                android:id="@+id/common_activity_subTitle_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/ts1"
+                android:textSize="@dimen/sp_9" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/common_activity_right_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/def_margin"
+            android:gravity="center_vertical"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+        <ImageView
+            android:id="@+id/common_activity_right_iv"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/common_activity_content_fl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

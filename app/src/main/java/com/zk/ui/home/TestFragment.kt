@@ -1,14 +1,23 @@
 package com.zk.ui.home
 
+import android.view.View
+import butterknife.OnClick
+import com.coder.zzq.smartshow.toast.SmartToast
 import com.zk.framework.ui.ZBaseFragment
+import com.zk.framework.ui.mvp.ZBasePresenter
 import com.zk.mytest.R
 
 /**
- * -
+ * -测试界面
+ *
  * @author 张科
  * @date 2019/2/25.
  */
 class TestFragment : ZBaseFragment() {
+
+    override fun setPresenter(presenter: ZBasePresenter?) {
+    }
+
     override fun getLayoutId(): Int {
         return R.layout.app_test
     }
@@ -20,33 +29,8 @@ class TestFragment : ZBaseFragment() {
         return "测试界面"
     }
 
-    /**
-     * 初始化bundle数据
-     */
-    override fun initBundle() {
-    }
-
-    /**
-     * 查找view
-     */
-    override fun findView() {
-    }
-
-    /**
-     * 初始化对象
-     */
-    override fun initObject() {
-    }
-
-    /**
-     * 初始化view
-     */
-    override fun initView() {
-    }
-
-    /**
-     * 初始化数据
-     */
-    override fun initData() {
+    @OnClick(R.id.bt1)
+    fun click(v: View) {
+        SmartToast.show("ccc")
     }
 }
