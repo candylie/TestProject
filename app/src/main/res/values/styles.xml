@@ -17,10 +17,34 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="main_text_size_style">
+        <item name="android:textSize">@dimen/main_text_size</item>
+        <item name="android:textColor">@color/color_000</item>
+    </style>
+
+    <style name="second_text_size_style">
+        <item name="android:textSize">@dimen/second_text_size</item>
+        <item name="android:textColor">@color/color_666</item>
+    </style>
+
+    <style name="hint_text_size_style">
+        <item name="android:textSize">@dimen/hint_text_size</item>
+        <item name="android:textColor">@color/color_999</item>
+    </style>
+
+
     <!--线条颜色-->
     <style name="layout_spilt_line_style">
-        <item name="android:background">@color/divide_line</item>
+        <item name="android:background">@color/layout_divide_line</item>
         <item name="android:layout_height">@dimen/layout_split_height</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <!--线条颜色-->
+    <style name="line_spilt_line_style">
+        <item name="android:background">@color/divide_line</item>
+        <item name="android:layout_height">@dimen/line_split_height</item>
         <item name="android:layout_width">match_parent</item>
     </style>
 

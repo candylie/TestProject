@@ -6,8 +6,17 @@
 
     <string name="action_settings">Settings</string>
     <string name="string_holder">--</string>
-    <string name="task_1">我要吃饭</string>
-    <string name="task_2">我去带饭</string>
+    <string name="task_1">帮个忙呗</string>
+    <string name="task_2">带一jio</string>
     <string name="tab_home">home</string>
     <string name="tab_test">test</string>
+
+
+    <string name="now_location">当前位置: </string>
+    <string name="receipt_location">收货地址: </string>
+    <string name="receipt_people">收货人: </string>
+
+    <string name="service_location">送达地址: </string>
+
+
 </resources>

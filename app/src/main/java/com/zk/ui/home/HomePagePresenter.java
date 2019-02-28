@@ -7,6 +7,7 @@ import com.zk.framework.ui.mvp.ZBaseView;
 import com.zk.mytest.R;
 import com.zk.ui.main.CommonActivity;
 import com.zk.ui.publish.DemandPublishFragment;
+import com.zk.ui.publish.TaskPublishFragment;
 import com.zk.util.IntentUtil;
 
 /**
@@ -32,13 +33,18 @@ public class HomePagePresenter implements ZBasePresenter {
     public void triggerViewListener(int flag, View view) {
         switch (view.getId()) {
             case R.id.home_task1_tv:
-
+                //帮个忙
                 IntentUtil.Build.newInstance().setContext(mView.getAttachAcitvity())
                         .setToActivity(CommonActivity.class)
                         .putExtra(CommonActivity.FRAGMENT_PATH, DemandPublishFragment.class.getName())
                         .start();
                 break;
             case R.id.home_task2_tv:
+                //帮别人带饭
+                IntentUtil.Build.newInstance().setContext(mView.getAttachAcitvity())
+                        .setToActivity(CommonActivity.class)
+                        .putExtra(CommonActivity.FRAGMENT_PATH, TaskPublishFragment.class.getName())
+                        .start();
                 break;
             default:
                 break;

@@ -114,7 +114,7 @@ public class BottomBarItem extends LinearLayout {
         title = ta.getString(R.styleable.BottomBarItem_itemText);
         titleTextSize = ta.getDimensionPixelSize(R.styleable.BottomBarItem_itemTextSize, UIUtils.sp2px(context, titleTextSize));
 
-        titleNormalColor = ta.getColor(R.styleable.BottomBarItem_textColorNormal, UIUtils.getColor(context, R.color.text_color_333));
+        titleNormalColor = ta.getColor(R.styleable.BottomBarItem_textColorNormal, UIUtils.getColor(context, R.color.color_333));
         titleSelectedColor = ta.getColor(R.styleable.BottomBarItem_textColorSelected, UIUtils.getColor(context, R.color.theme_color));
 
         marginTop = ta.getDimensionPixelSize(R.styleable.BottomBarItem_itemMarginTop, UIUtils.dip2Px(context, marginTop));
@@ -383,8 +383,8 @@ public class BottomBarItem extends LinearLayout {
         public Builder(Context context) {
             this.context = context;
             titleTextSize = UIUtils.sp2px(context, 12);
-            titleNormalColor = getColor(R.color.text_color_999);
-            titleSelectedColor = getColor(R.color.text_color_000);
+            titleNormalColor = getColor(R.color.color_999);
+            titleSelectedColor = getColor(R.color.color_000);
             unreadTextSize = UIUtils.sp2px(context, 10);
             msgTextSize = UIUtils.sp2px(context, 6);
             unreadTextColor = getColor(R.color.white);

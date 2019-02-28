@@ -10,12 +10,21 @@
     <dimen name="sp_9">9sp</dimen>
     <dimen name="sp_10">10sp</dimen>
     <dimen name="dp_10">10dp</dimen>
+
+    <dimen name="main_text_size">14sp</dimen>
+    <dimen name="second_text_size">12dp</dimen>
+    <dimen name="hint_text_size">10dp</dimen>
+
+
     <!--//默认边距-->
     <dimen name="def_margin">10dp</dimen>
     <!--//圆角弧度-->
     <dimen name="shape_corners">5dp</dimen>
     <!--//分割线高度-->
-    <dimen name="layout_split_height">0.5dp</dimen>
+    <dimen name="line_split_height">0.5dp</dimen>
+    <!--//分割线高度-->
+    <dimen name="layout_split_height">8dp</dimen>
     <!--ActionBar高度-->
     <dimen name="action_bar_height">48dp</dimen>
+    <dimen name="dp_35">35dp</dimen>
 </resources>

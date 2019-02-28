@@ -123,8 +123,8 @@ class MainActivity : ZBaseActivity(), BottomBarLayout.OnItemSelectedListener {
     private fun createBottomBarItem(i: Int): BottomBarItem {
         return BottomBarItem.Builder(this)
                 .titleTextSize(8)
-                .titleNormalColor(R.color.text_color_666)
-                .titleSelectedColor(R.color.text_color_333)
+                .titleNormalColor(R.color.color_666)
+                .titleSelectedColor(R.color.color_333)
                 //              .openTouchBg(false)
                 //              .marginTop(5)
                 //              .itemPadding(5)
