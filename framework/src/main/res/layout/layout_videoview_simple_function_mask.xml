@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--自定义播放器功能蒙版-->
+
+    <!--视频图片显示img-->
+    <ImageView
+        android:id="@+id/videoView_functionMask_thumb_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--顶部功能布局-->
+    <LinearLayout
+        android:id="@+id/videoView_functionMask_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/framework_ts_7"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/videoView_functionMask_back_iv"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            app:srcCompat="@drawable/ic_hq_gray_left_arrow_svg" />
+
+        <TextView
+            android:id="@+id/videoView_functionMask_title_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|left"
+            android:text="@string/app_name"
+            tools:ignore="RtlHardcoded" />
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/videoView_functionMask_battery_tv"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textSize="9dp" />
+
+            <TextView
+                android:id="@+id/videoView_functionMask_time_tv"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textSize="9dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--中间播放状态布局-->
+    <ImageView
+        android:id="@+id/videoView_functionMask_playState_img"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_video_play_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--重播文字提示-->
+    <TextView
+        android:id="@+id/videoView_functionMask_replay_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/zk_framework_def_margin"
+        android:text="重播"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/videoView_functionMask_playState_img"
+        tools:ignore="HardcodedText" />
+
+    <!--低部功能布局-->
+    <LinearLayout
+        android:id="@+id/videoView_functionMask_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/videoView_functionMask_playing_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/zk_framework_def_margin"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textSize="@dimen/dp_10"
+            tools:ignore="SpUsage" />
+
+        <SeekBar
+            android:id="@+id/videoView_functionMask_seekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/videoView_functionMask_all_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textSize="@dimen/dp_10"
+            tools:ignore="SpUsage" />
+
+        <ImageView
+            android:id="@+id/videoView_functionMask_changeWindow_img"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/zk_framework_def_margin"
+            android:padding="5dp"
+            app:srcCompat="@drawable/ic_hq_gray_left_arrow_svg" />
+
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

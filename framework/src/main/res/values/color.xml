@@ -4,4 +4,14 @@
     <color name="status_layout_background_color">#EBEBEB</color>
     <color name="status_layout_tip_text_color">#8a8a8a</color>
     <color name="status_layout_click_view_text_color">#0084FF</color>
+
+    <color name="framework_ts_1">#8f0000</color>
+    <color name="framework_ts_2">#e63c36</color>
+    <color name="framework_ts_3">#fa7b79</color>
+    <color name="framework_ts_4">#008f00</color>
+    <color name="framework_ts_5">#4efa68</color>
+    <color name="framework_ts_6">#81ed9a</color>
+    <color name="framework_ts_7">#00008f</color>
+    <color name="framework_ts_8">#4848e7</color>
+    <color name="framework_ts_9">#644fff</color>
 </resources>

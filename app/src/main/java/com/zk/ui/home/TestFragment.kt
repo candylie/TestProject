@@ -1,11 +1,14 @@
 package com.zk.ui.home
 
+import android.content.Intent
 import android.view.View
 import butterknife.OnClick
 import com.coder.zzq.smartshow.toast.SmartToast
 import com.zk.framework.ui.ZBaseFragment
 import com.zk.framework.ui.mvp.ZBasePresenter
 import com.zk.mytest.R
+import com.zk.ui.main.CommonActivity
+import com.zk.ui.videotest.VideoTextFragment
 
 /**
  * -测试界面
@@ -29,8 +32,16 @@ class TestFragment : ZBaseFragment() {
         return "测试界面"
     }
 
-    @OnClick(R.id.bt1)
+    @OnClick(R.id.bt1, R.id.bt2)
     fun click(v: View) {
-        SmartToast.show("ccc")
+        when (v.id) {
+            R.id.bt1 -> SmartToast.show("ccc")
+            R.id.bt2 -> {
+                val a = Intent(activity, CommonActivity::class.java)
+                a.putExtra(CommonActivity.FRAGMENT_PATH, VideoTextFragment::class.java.name)
+                activity!!.startActivity(a)
+            }
+        }
+
     }
 }

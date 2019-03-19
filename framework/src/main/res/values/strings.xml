@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Framwork</string>
+    <string name="app_name">Framework</string>
     <!--请求异常提示信息 -->
     <string name="not_near_service_info2">敬请期待！</string>
     <string name="connect_error">连接异常</string>
@@ -18,4 +18,8 @@
     <string name="brvah_loading">正在加载中...</string>
     <string name="brvah_load_failed">加载失败，请点我重试</string>
     <string name="brvah_load_end">没有更多数据</string>
+
+    <string name="z_framework_video_replay">重播</string>
+    <string name="z_framework_video_reloading">重试</string>
+    <string name="z_framework_video_loading">加载中</string>
 </resources>
