@@ -12,25 +12,29 @@ import com.zk.framework.view.videoplay.i.IZVideoPlayInstruction;
  */
 public interface IZBaseVideoFunMaskView {
     /**
-     * 竖屏的时候展示相关的功能按钮的方法
+     * 隐藏功能蒙版,展示底部的细进度条
+     *
+     * @param mViewShowState -界面展示状态
+     *                       未展开的缩小状态(默认状态)
+     *                       全屏展开状态(横屏全屏/竖屏全屏)
+     *                       悬浮状态
      */
-    void showNarrowStateFunView();
-
-    /**
-     * 横屏的时候展示相关的功能按钮的方法
-     */
-    void showMaximumStateFunView();
-
-    /**
-     * 悬浮的时候展示相关的功能按钮的方法
-     */
-    void showFloatingStateFunView();
-
+    void showBarView(int mViewShowState);
 
     /**
      * 隐藏功能蒙版,展示底部的细进度条
      */
-    void hideFunView();
+    void hideBarView();
+
+    /**
+     * 展示中间的操作按钮
+     */
+    void showStateChangeButton();
+
+    /**
+     * 隐藏中间的操作按钮
+     */
+    void hideStateChangeButton();
 
     /**
      * 设置返回键回调

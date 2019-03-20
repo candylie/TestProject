@@ -106,66 +106,35 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
     }
 
     @Override
-    public void showNarrowStateFunView() {
-        mTopBarView.setVisibility(VISIBLE);
-        mButtomBarView.setVisibility(VISIBLE);
-
-        mBackImg.setVisibility(GONE);
-        mBatteryTv.setVisibility(GONE);
-        mTimeTv.setVisibility(GONE);
-        if (mPlayInstruction != null && mPlayInstruction.getPlayState() == FINISHED_PLAY_STATE) {
-            mThumbImg.setVisibility(VISIBLE);
-        } else {
-            mThumbImg.setVisibility(GONE);
+    public void showBarView(int mViewShowState) {
+        if (mViewShowState == NARROW_SHOW_STATE) {
+            //当前是竖屏
+            showNarrowStateFunView();
+        } else if (mViewShowState == MAXIMUM_SHOW_STATE) {
+            //当前是横屏
+            showMaximumStateFunView();
+        } else if (mViewShowState == FLOATING_SHOW_STATE) {
+            //当前是悬浮
+            showFloatingStateFunView();
         }
-        mTimeTv.setVisibility(VISIBLE);
-        mPlaySeekBar.setVisibility(VISIBLE);
-        mAllTimeTv.setVisibility(VISIBLE);
-        mChangeWindowImg.setVisibility(VISIBLE);
     }
 
     @Override
-    public void showMaximumStateFunView() {
-        mTopBarView.setVisibility(VISIBLE);
-        mButtomBarView.setVisibility(VISIBLE);
-
-        mBackImg.setVisibility(VISIBLE);
-        mBatteryTv.setVisibility(VISIBLE);
-        mTimeTv.setVisibility(VISIBLE);
-        if (mPlayInstruction != null && mPlayInstruction.getPlayState() == FINISHED_PLAY_STATE) {
-            mThumbImg.setVisibility(VISIBLE);
-        } else {
-            mThumbImg.setVisibility(GONE);
-        }
-        mTimeTv.setVisibility(VISIBLE);
-        mPlaySeekBar.setVisibility(VISIBLE);
-        mAllTimeTv.setVisibility(VISIBLE);
-        mChangeWindowImg.setVisibility(VISIBLE);
-    }
-
-    @Override
-    public void showFloatingStateFunView() {
-        mTopBarView.setVisibility(VISIBLE);
-        mButtomBarView.setVisibility(VISIBLE);
-
-        mBackImg.setVisibility(GONE);
-        mBatteryTv.setVisibility(GONE);
-        mTimeTv.setVisibility(GONE);
-        if (mPlayInstruction != null && mPlayInstruction.getPlayState() == FINISHED_PLAY_STATE) {
-            mThumbImg.setVisibility(VISIBLE);
-        } else {
-            mThumbImg.setVisibility(GONE);
-        }
-        mTimeTv.setVisibility(VISIBLE);
-        mPlaySeekBar.setVisibility(VISIBLE);
-        mAllTimeTv.setVisibility(VISIBLE);
-        mChangeWindowImg.setVisibility(VISIBLE);
-    }
-
-    @Override
-    public void hideFunView() {
+    public void hideBarView() {
         mTopBarView.setVisibility(GONE);
         mButtomBarView.setVisibility(GONE);
+    }
+
+    @Override
+    public void showStateChangeButton() {
+        mPlayStateImg.setVisibility(VISIBLE);
+        mPlayTipTv.setVisibility(VISIBLE);
+    }
+
+    @Override
+    public void hideStateChangeButton() {
+        mPlayStateImg.setVisibility(GONE);
+        mPlayTipTv.setVisibility(GONE);
     }
 
     @Override
@@ -232,6 +201,69 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
                 mChangeWindowClickCallBack.onClick(v);
             }
         }
+    }
+
+    /**
+     * 竖屏的时候展示相关的功能按钮的方法
+     */
+    private void showNarrowStateFunView() {
+        mTopBarView.setVisibility(VISIBLE);
+        mButtomBarView.setVisibility(VISIBLE);
+
+        mBackImg.setVisibility(GONE);
+        mBatteryTv.setVisibility(GONE);
+        mTimeTv.setVisibility(GONE);
+        if (mPlayInstruction != null && mPlayInstruction.getPlayState() == FINISHED_PLAY_STATE) {
+            mThumbImg.setVisibility(VISIBLE);
+        } else {
+            mThumbImg.setVisibility(GONE);
+        }
+        mTimeTv.setVisibility(VISIBLE);
+        mPlaySeekBar.setVisibility(VISIBLE);
+        mAllTimeTv.setVisibility(VISIBLE);
+        mChangeWindowImg.setVisibility(VISIBLE);
+    }
+
+    /**
+     * 横屏的时候展示相关的功能按钮的方法
+     */
+    private void showMaximumStateFunView() {
+        mTopBarView.setVisibility(VISIBLE);
+        mButtomBarView.setVisibility(VISIBLE);
+
+        mBackImg.setVisibility(VISIBLE);
+        mBatteryTv.setVisibility(VISIBLE);
+        mTimeTv.setVisibility(VISIBLE);
+        if (mPlayInstruction != null && mPlayInstruction.getPlayState() == FINISHED_PLAY_STATE) {
+            mThumbImg.setVisibility(VISIBLE);
+        } else {
+            mThumbImg.setVisibility(GONE);
+        }
+        mTimeTv.setVisibility(VISIBLE);
+        mPlaySeekBar.setVisibility(VISIBLE);
+        mAllTimeTv.setVisibility(VISIBLE);
+        mChangeWindowImg.setVisibility(VISIBLE);
+    }
+
+    /**
+     * 悬浮的时候展示相关的功能按钮的方法
+     */
+    private void showFloatingStateFunView() {
+        mTopBarView.setVisibility(VISIBLE);
+        mButtomBarView.setVisibility(VISIBLE);
+
+        mBackImg.setVisibility(GONE);
+        mBatteryTv.setVisibility(GONE);
+        mTimeTv.setVisibility(GONE);
+        if (mPlayInstruction != null && mPlayInstruction.getPlayState() == FINISHED_PLAY_STATE) {
+            mThumbImg.setVisibility(VISIBLE);
+        } else {
+            mThumbImg.setVisibility(GONE);
+        }
+        mTimeTv.setVisibility(VISIBLE);
+        mPlaySeekBar.setVisibility(VISIBLE);
+        mAllTimeTv.setVisibility(VISIBLE);
+        mChangeWindowImg.setVisibility(VISIBLE);
     }
 
     @Override

@@ -26,7 +26,7 @@ import com.zk.framework.view.videoplay.mask.ZVideoSimpleFunMaskView;
 import com.zk.framework.view.videoplay.util.ZVideoPlayControl;
 
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.HIDE_MASK_VIEW_MESSAGE_ACTION;
-import static com.zk.framework.view.videoplay.constant.ZVideoConstant.MEDIA_PLAY_INIT_MESSAGE_ACTION;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.MEDIA_PLAY_INIT_OK_MESSAGE_ACTION;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.NARROW_SHOW_STATE;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.SHOW_MASK_VIEW_MESSAGE_ACTION;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.UNINIT_PLAY_STATE;
@@ -99,12 +99,14 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
             super.handleMessage(msg);
             switch (msg.what) {
                 case HIDE_MASK_VIEW_MESSAGE_ACTION:
-                    ZVideoPlayUtil.hideFunMaskView(mViewPlayState, ZVideoView.this);
+                    ZVideoPlayUtil.hideMaskBarView(mViewPlayState, ZVideoView.this);
+                    ZVideoPlayUtil.hideMaskStateBTView(mViewShowState, mViewPlayState, ZVideoView.this);
                     break;
                 case SHOW_MASK_VIEW_MESSAGE_ACTION:
-                    ZVideoPlayUtil.showFunMaskView(mViewShowState, mViewPlayState, ZVideoView.this);
+                    ZVideoPlayUtil.showMaskBarView(mViewShowState, mViewPlayState, ZVideoView.this);
+                    ZVideoPlayUtil.showMaskStateBTView(mViewShowState, mViewPlayState, ZVideoView.this);
                     break;
-                case MEDIA_PLAY_INIT_MESSAGE_ACTION:
+                case MEDIA_PLAY_INIT_OK_MESSAGE_ACTION:
                     //播放器初始化
                     ZVideoPlayUtil.readyPlay(mViewShowState, ZVideoView.this);
                     break;
@@ -322,7 +324,7 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
                 mSurface = new Surface(mSurfaceTexture);
             }
             //通知初始化播放器
-            mHandler.handleMessage(Message.obtain(getHandler(), MEDIA_PLAY_INIT_MESSAGE_ACTION));
+            mHandler.handleMessage(Message.obtain(getHandler(), MEDIA_PLAY_INIT_OK_MESSAGE_ACTION));
         } else {
             mTextureView.setSurfaceTexture(mSurfaceTexture);
         }
