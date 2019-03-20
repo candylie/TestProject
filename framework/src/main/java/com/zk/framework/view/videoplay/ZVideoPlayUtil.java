@@ -1,11 +1,16 @@
 package com.zk.framework.view.videoplay;
 
-import android.media.MediaPlayer;
-
 import com.zk.framework.view.videoplay.mask.IZBaseVideoFunMaskView;
 import com.zk.framework.view.videoplay.util.ZVideoPlayMediaManager;
 
-import static com.zk.framework.view.videoplay.constant.ZVideoConstant.*;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.ERROR_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.FINISHED_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.FLOATING_SHOW_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.MAXIMUM_SHOW_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.NARROW_SHOW_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PAUSE_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PLAYING_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PREPARING_PLAY_STATE;
 
 /**
  * -播放器工具类,用来控制功能蒙版的状态, 播放器的播放暂停重播 快进转跳等操作的工具,对包外隐藏
@@ -22,23 +27,9 @@ class ZVideoPlayUtil {
      * @param videoView      -
      */
     static void readyPlay(int mViewShowState, ZVideoView videoView) {
-        IZBaseVideoFunMaskView maskView = videoView.getMaskView();
-        //设置功能蒙版的状态
-        if (maskView != null) {
-            if (mViewShowState == NARROW_SHOW_STATE) {
-                //当前是竖屏
-                maskView.showNarrowStateFunView();
-            } else if (mViewShowState == MAXIMUM_SHOW_STATE) {
-                //当前是横屏
-                maskView.showMaximumStateFunView();
-            } else if (mViewShowState == FLOATING_SHOW_STATE) {
-                //当前是悬浮
-                maskView.showFloatingStateFunView();
-            }
-            maskView.changePlayState(PREPARING_PLAY_STATE);
-        }
         //设置播放器当前播放状态
         videoView.setPlayState(PREPARING_PLAY_STATE);
+        showFunMaskView(mViewShowState, PREPARING_PLAY_STATE, videoView);
         //延时消失功能蒙版View
         videoView.delayHideMaskView();
         //开始播放视频
@@ -49,30 +40,15 @@ class ZVideoPlayUtil {
      * 开始播放
      *
      * @param mViewShowState -
-     * @param mp             -
      * @param videoView      -
      */
-    static void start(int mViewShowState, MediaPlayer mp, ZVideoView videoView) {
-        IZBaseVideoFunMaskView maskView = videoView.getMaskView();
-        //设置功能蒙版的状态
-        if (maskView != null) {
-            if (mViewShowState == NARROW_SHOW_STATE) {
-                //当前是竖屏
-                maskView.showNarrowStateFunView();
-            } else if (mViewShowState == MAXIMUM_SHOW_STATE) {
-                //当前是横屏
-                maskView.showMaximumStateFunView();
-            } else if (mViewShowState == FLOATING_SHOW_STATE) {
-                //当前是悬浮
-                maskView.showFloatingStateFunView();
-            }
-            maskView.changePlayState(PLAYING_PLAY_STATE);
-        }
+    static void start(int mViewShowState, ZVideoView videoView) {
         //设置播放器当前播放状态
         videoView.setPlayState(PLAYING_PLAY_STATE);
+        showFunMaskView(mViewShowState, PLAYING_PLAY_STATE, videoView);
         //延时消失功能蒙版View
         videoView.delayHideMaskView();
-        ZVideoPlayMediaManager.obtain().start(mp, videoView);
+        ZVideoPlayMediaManager.obtain().start(videoView);
     }
 
     /**
@@ -82,23 +58,9 @@ class ZVideoPlayUtil {
      * @param videoView      -
      */
     static void pause(int mViewShowState, ZVideoView videoView) {
-        IZBaseVideoFunMaskView maskView = videoView.getMaskView();
-        //设置功能蒙版的状态
-        if (maskView != null) {
-            if (mViewShowState == NARROW_SHOW_STATE) {
-                //当前是竖屏
-                maskView.showNarrowStateFunView();
-            } else if (mViewShowState == MAXIMUM_SHOW_STATE) {
-                //当前是横屏
-                maskView.showMaximumStateFunView();
-            } else if (mViewShowState == FLOATING_SHOW_STATE) {
-                //当前是悬浮
-                maskView.showFloatingStateFunView();
-            }
-            maskView.changePlayState(PAUSE_PLAY_STATE);
-        }
         //设置播放器当前播放状态
         videoView.setPlayState(PAUSE_PLAY_STATE);
+        showFunMaskView(mViewShowState, PAUSE_PLAY_STATE, videoView);
         //延时消失功能蒙版View
         videoView.delayHideMaskView();
         //开始暂停视频
@@ -112,15 +74,12 @@ class ZVideoPlayUtil {
      * @param videoView      -
      */
     static void replay(int mViewShowState, ZVideoView videoView) {
-        IZBaseVideoFunMaskView maskView = videoView.getMaskView();
-        //设置功能蒙版的状态
-        if (maskView != null) {
-            //不需要判断展示界面是全屏还是悬浮等
-            maskView.changePlayState(FINISHED_PLAY_STATE);
-            maskView.hideFunView();
-        }
+        videoView.setPlayState(PLAYING_PLAY_STATE);
+        hideFunMaskView(PLAYING_PLAY_STATE, videoView);
+        //延时消失功能蒙版View
+        videoView.delayHideMaskView();
         //开始重头播放视频
-
+        ZVideoPlayMediaManager.obtain().replay(videoView);
     }
 
     /**
@@ -130,8 +89,29 @@ class ZVideoPlayUtil {
      * @param videoView      -
      */
     static void playError(int mViewShowState, ZVideoView videoView) {
+        videoView.setPlayState(ERROR_PLAY_STATE);
+        showFunMaskView(mViewShowState, ERROR_PLAY_STATE, videoView);
+    }
+
+    /**
+     * 播放完毕
+     *
+     * @param videoView -
+     */
+    static void playCompletion(ZVideoView videoView) {
+        videoView.setPlayState(FINISHED_PLAY_STATE);
+        hideFunMaskView(FINISHED_PLAY_STATE, videoView);
+    }
+
+    /**
+     * 展示蒙版
+     *
+     * @param mViewShowState  -
+     * @param mVideoPlayState -
+     * @param videoView       -
+     */
+    static void showFunMaskView(int mViewShowState, int mVideoPlayState, ZVideoView videoView) {
         IZBaseVideoFunMaskView maskView = videoView.getMaskView();
-        //设置功能蒙版的状态
         if (maskView != null) {
             if (mViewShowState == NARROW_SHOW_STATE) {
                 //当前是竖屏
@@ -143,9 +123,23 @@ class ZVideoPlayUtil {
                 //当前是悬浮
                 maskView.showFloatingStateFunView();
             }
-            maskView.changePlayState(ERROR_PLAY_STATE);
+            maskView.changePlayState(mVideoPlayState);
+            videoView.delayHideMaskView();
         }
-        videoView.setPlayState(ERROR_PLAY_STATE);
+    }
+
+    /**
+     * 关闭蒙版
+     *
+     * @param mVideoPlayState -
+     * @param videoView       -
+     */
+    static void hideFunMaskView(int mVideoPlayState, ZVideoView videoView) {
+        IZBaseVideoFunMaskView maskView = videoView.getMaskView();
+        if (maskView != null) {
+            maskView.changePlayState(mVideoPlayState);
+            maskView.hideFunView();
+        }
     }
 
 }

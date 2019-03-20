@@ -66,5 +66,13 @@ public class ZVideoConstant {
     /**
      * 隐藏功能蒙版的消息号
      */
-    public final static int HIDE_MESSAGE_ACTION = 1;
+    public final static int HIDE_MASK_VIEW_MESSAGE_ACTION = 1;
+    /**
+     * 显示功能蒙版的消息号
+     */
+    public final static int SHOW_MASK_VIEW_MESSAGE_ACTION = 2;
+    /**
+     * 播放view初始化完成, 通知播放器开始初始化 的消息号
+     */
+    public final static int MEDIA_PLAY_INIT_MESSAGE_ACTION = 3;
 }

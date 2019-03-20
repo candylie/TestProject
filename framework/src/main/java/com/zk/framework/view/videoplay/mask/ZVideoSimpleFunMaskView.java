@@ -31,8 +31,8 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
     /**
      * 功能蒙版View
      */
-    private View mFunView;
-
+    private View mTopBarView;
+    private View mButtomBarView;
     private ImageView mThumbImg;
 
     private View mBackImg;
@@ -79,11 +79,12 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
 
     private void initView(Context context) {
         mInflater = LayoutInflater.from(context);
-        mFunView = mInflater.inflate(R.layout.layout_videoview_simple_function_mask, null, false);
+        View mFunView = mInflater.inflate(R.layout.layout_videoview_simple_function_mask, null, false);
         addView(mFunView);
         //缩略图
         mThumbImg = mFunView.findViewById(R.id.videoView_functionMask_thumb_iv);
         //顶部功能按钮
+        mTopBarView = mFunView.findViewById(R.id.videoView_functionMask_top_bar);
         mBackImg = mFunView.findViewById(R.id.videoView_functionMask_back_iv);
         mTitleTv = mFunView.findViewById(R.id.videoView_functionMask_title_tv);
         mBatteryTv = mFunView.findViewById(R.id.videoView_functionMask_battery_tv);
@@ -92,6 +93,7 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
         mPlayStateImg = mFunView.findViewById(R.id.videoView_functionMask_playState_img);
         mPlayTipTv = mFunView.findViewById(R.id.videoView_functionMask_replay_tv);
         //底部功能按钮
+        mButtomBarView = mFunView.findViewById(R.id.videoView_functionMask_bottom_bar);
         mPlayingTimeTv = mFunView.findViewById(R.id.videoView_functionMask_playing_time_tv);
         mAllTimeTv = mFunView.findViewById(R.id.videoView_functionMask_all_time_tv);
         mPlaySeekBar = mFunView.findViewById(R.id.videoView_functionMask_seekBar);
@@ -105,16 +107,16 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
 
     @Override
     public void showNarrowStateFunView() {
-        mFunView.setVisibility(VISIBLE);
+        mTopBarView.setVisibility(VISIBLE);
+        mButtomBarView.setVisibility(VISIBLE);
+
         mBackImg.setVisibility(GONE);
         mBatteryTv.setVisibility(GONE);
         mTimeTv.setVisibility(GONE);
-        mPlayStateImg.setVisibility(VISIBLE);
         if (mPlayInstruction != null && mPlayInstruction.getPlayState() == FINISHED_PLAY_STATE) {
-            mPlayTipTv.setVisibility(VISIBLE);
-            mPlayTipTv.setText(R.string.z_framework_video_replay);
+            mThumbImg.setVisibility(VISIBLE);
         } else {
-            mPlayTipTv.setVisibility(GONE);
+            mThumbImg.setVisibility(GONE);
         }
         mTimeTv.setVisibility(VISIBLE);
         mPlaySeekBar.setVisibility(VISIBLE);
@@ -124,16 +126,16 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
 
     @Override
     public void showMaximumStateFunView() {
-        mFunView.setVisibility(VISIBLE);
+        mTopBarView.setVisibility(VISIBLE);
+        mButtomBarView.setVisibility(VISIBLE);
+
         mBackImg.setVisibility(VISIBLE);
         mBatteryTv.setVisibility(VISIBLE);
         mTimeTv.setVisibility(VISIBLE);
-        mPlayStateImg.setVisibility(VISIBLE);
         if (mPlayInstruction != null && mPlayInstruction.getPlayState() == FINISHED_PLAY_STATE) {
-            mPlayTipTv.setVisibility(VISIBLE);
-            mPlayTipTv.setText(R.string.z_framework_video_replay);
+            mThumbImg.setVisibility(VISIBLE);
         } else {
-            mPlayTipTv.setVisibility(GONE);
+            mThumbImg.setVisibility(GONE);
         }
         mTimeTv.setVisibility(VISIBLE);
         mPlaySeekBar.setVisibility(VISIBLE);
@@ -143,16 +145,16 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
 
     @Override
     public void showFloatingStateFunView() {
-        mFunView.setVisibility(VISIBLE);
+        mTopBarView.setVisibility(VISIBLE);
+        mButtomBarView.setVisibility(VISIBLE);
+
         mBackImg.setVisibility(GONE);
         mBatteryTv.setVisibility(GONE);
         mTimeTv.setVisibility(GONE);
-        mPlayStateImg.setVisibility(VISIBLE);
         if (mPlayInstruction != null && mPlayInstruction.getPlayState() == FINISHED_PLAY_STATE) {
-            mPlayTipTv.setVisibility(VISIBLE);
-            mPlayTipTv.setText(R.string.z_framework_video_replay);
+            mThumbImg.setVisibility(VISIBLE);
         } else {
-            mPlayTipTv.setVisibility(GONE);
+            mThumbImg.setVisibility(GONE);
         }
         mTimeTv.setVisibility(VISIBLE);
         mPlaySeekBar.setVisibility(VISIBLE);
@@ -162,7 +164,8 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
 
     @Override
     public void hideFunView() {
-        mFunView.setVisibility(GONE);
+        mTopBarView.setVisibility(GONE);
+        mButtomBarView.setVisibility(GONE);
     }
 
     @Override
@@ -170,25 +173,30 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
         switch (nextPlayState) {
             case PLAYING_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_play_selector));
+                mPlayStateImg.setVisibility(VISIBLE);
                 mPlayTipTv.setVisibility(GONE);
                 break;
             case PAUSE_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_pause_selector));
+                mPlayStateImg.setVisibility(VISIBLE);
                 mPlayTipTv.setVisibility(GONE);
                 break;
             case FINISHED_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_replay_selector));
                 mPlayTipTv.setText(R.string.z_framework_video_replay);
+                mPlayStateImg.setVisibility(VISIBLE);
                 mPlayTipTv.setVisibility(VISIBLE);
                 break;
             case LOADING_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_loading_normal));
                 mPlayTipTv.setText(R.string.z_framework_video_loading);
+                mPlayStateImg.setVisibility(VISIBLE);
                 mPlayTipTv.setVisibility(VISIBLE);
                 break;
             case ERROR_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_replay_selector));
                 mPlayTipTv.setText(R.string.z_framework_video_reloading);
+                mPlayStateImg.setVisibility(VISIBLE);
                 mPlayTipTv.setVisibility(VISIBLE);
                 break;
             default:

@@ -1,5 +1,6 @@
 package com.zk.framework.view.videoplay;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
@@ -9,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -23,7 +25,11 @@ import com.zk.framework.view.videoplay.mask.IZBaseVideoFunMaskView;
 import com.zk.framework.view.videoplay.mask.ZVideoSimpleFunMaskView;
 import com.zk.framework.view.videoplay.util.ZVideoPlayControl;
 
-import static com.zk.framework.view.videoplay.constant.ZVideoConstant.*;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.HIDE_MASK_VIEW_MESSAGE_ACTION;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.MEDIA_PLAY_INIT_MESSAGE_ACTION;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.NARROW_SHOW_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.SHOW_MASK_VIEW_MESSAGE_ACTION;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.UNINIT_PLAY_STATE;
 
 /**
  * -视频播放器
@@ -84,6 +90,29 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
     private OnClickListener mBackImgClickCallBack;
     private OnClickListener mChangeWindowClickCallBack;
     private SeekBar.OnSeekBarChangeListener mSeekBarChangeListener;
+
+    @SuppressLint("HandlerLeak")
+    private class MyHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case HIDE_MASK_VIEW_MESSAGE_ACTION:
+                    ZVideoPlayUtil.hideFunMaskView(mViewPlayState, ZVideoView.this);
+                    break;
+                case SHOW_MASK_VIEW_MESSAGE_ACTION:
+                    ZVideoPlayUtil.showFunMaskView(mViewShowState, mViewPlayState, ZVideoView.this);
+                    break;
+                case MEDIA_PLAY_INIT_MESSAGE_ACTION:
+                    //播放器初始化
+                    ZVideoPlayUtil.readyPlay(mViewShowState, ZVideoView.this);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     public ZVideoView(@NonNull Context context) {
         this(context, null);
@@ -150,8 +179,10 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
     public void start(ZVideoPlayControl.ZVideoParamBuilder builder) {
         if (builder == null && mBuilder != null) {
             //表示从暂停回到继续播放的状态
+            ZVideoPlayUtil.start(mViewShowState, this);
         } else if (builder != null && mBuilder == null) {
-            //表示初次播放 并设置播放相关的参数
+            //表示初次播放 初始化播放View, 并设置播放相关的参数
+            //当播放View初始化完成后,就可以开始设置播放器相关的配置了
             mBuilder = builder;
             if (!isInitDisplayView) {
                 if (builder.isUserTextureView()) {
@@ -163,9 +194,7 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
         } else if (builder == null) {
             //表示外界调用错误 因为播放器还没初始化
             Toast.makeText(getContext(), "播放器加载错误", Toast.LENGTH_SHORT).show();
-            return;
         }
-        ZVideoPlayUtil.readyPlay(mViewShowState, this);
     }
 
     /**
@@ -191,7 +220,10 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
 
     @Override
     public void delayHideMaskView() {
-        mHandler.sendMessageDelayed(Message.obtain(getHandler(), HIDE_MESSAGE_ACTION, mMaskView), 3000);
+        //先取消之前的延时任务
+        mHandler.removeMessages(HIDE_MASK_VIEW_MESSAGE_ACTION);
+        //重新延时消失
+        mHandler.sendMessageDelayed(Message.obtain(getHandler(), HIDE_MASK_VIEW_MESSAGE_ACTION), 3000);
     }
 
     @Override
@@ -280,13 +312,17 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         Log.e("zk", "onSurfaceTextureAvailable,width=" + width + ",height=" + height);
+        //播放的SurfaceTexture初始化完成了
         if (mSurfaceTexture == null) {
+            //表示是初次初始化完成
             mSurfaceTexture = surface;
             if (mSurface != null) {
                 mSurface.release();
             } else {
                 mSurface = new Surface(mSurfaceTexture);
             }
+            //通知初始化播放器
+            mHandler.handleMessage(Message.obtain(getHandler(), MEDIA_PLAY_INIT_MESSAGE_ACTION));
         } else {
             mTextureView.setSurfaceTexture(mSurfaceTexture);
         }
@@ -313,18 +349,18 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
 //    加载状态的三个回调 start
 
     /**
-     * 播放器初始化完成
+     * 播放器初始化完成,然后开始播放
      *
      * @param mp -
      */
     @Override
     public void onPrepared(MediaPlayer mp) {
-        ZVideoPlayUtil.start(mViewShowState, mp, this);
+        ZVideoPlayUtil.start(mViewShowState, this);
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
+        ZVideoPlayUtil.playCompletion(this);
     }
 
     @Override
@@ -338,23 +374,56 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
     public void onSeekComplete(MediaPlayer mp) {
 
     }
-//    加载状态的三个回调 end
 
-    private static class MyHandler extends Handler {
+    //    加载状态的三个回调 end
 
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case HIDE_MESSAGE_ACTION:
-                    if (msg.obj != null) {
-                        ((IZBaseVideoFunMaskView) msg.obj).hideFunView();
-                    }
-                    break;
-                default:
-                    break;
-            }
+    private boolean isTriggerSeekMove = false;
+    private float downX, downY;
+
+    /**
+     * 手势监听
+     *
+     * @param event -
+     * @return -
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                isTriggerSeekMove = false;
+                downX = event.getX();
+                downY = event.getY();
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                float x = event.getX();
+                float y = event.getY();
+                //先判断是否是上下滑动 再判断是否是快进快退
+                if (Math.abs(x - downX) > 50) {
+                    //表示是上下滑动 1.显示音量或者亮度的调整的框框
+                    isTriggerSeekMove = true;
+                    return true;
+                } else if (Math.abs(y - downY) > 50) {
+                    //表示是左右滑动 1.显示功能面板 2显示快进快退的框框
+                    isTriggerSeekMove = true;
+                    return true;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                //判断up-down的事件长短,并且判断是否触发了快进快退
+                long upTime = event.getEventTime();
+                if (!isTriggerSeekMove && (upTime - event.getDownTime()) < 500) {
+                    //表示单击时间 1.显示功能面板
+                    mHandler.handleMessage(Message.obtain(getHandler(), SHOW_MASK_VIEW_MESSAGE_ACTION));
+                }
+                isTriggerSeekMove = false;
+                return super.onTouchEvent(event);
+            case MotionEvent.ACTION_CANCEL:
+                isTriggerSeekMove = false;
+                return super.onTouchEvent(event);
+            default:
+                break;
         }
+        return super.onTouchEvent(event);
     }
-
 }

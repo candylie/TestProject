@@ -60,24 +60,24 @@ public class ZVideoPlayMediaManager {
             videoView.setPlayState(PREPARING_PLAY_STATE);
             if (player == null) {
                 player = new MediaPlayer();
-                player.setSurface(videoView.getSurface());
-                //设置播放器的状态监听
-                player.setOnPreparedListener(videoView);
-                //播放完成的监听
-                player.setOnCompletionListener(videoView);
-                //播放器播放失败监听
-                player.setOnErrorListener(videoView);
-                //设置播放类型
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                //设置进度的监听 todo ??
-                player.setOnSeekCompleteListener(videoView);
-                //设置是否一直保持屏幕开启
-                player.setScreenOnWhilePlaying(true);
-                //设置音量大小
-                player.setVolume(mVolume, mVolume);
             } else {
                 player.reset();
             }
+            player.setSurface(videoView.getSurface());
+            //设置播放器的状态监听
+            player.setOnPreparedListener(videoView);
+            //播放完成的监听
+            player.setOnCompletionListener(videoView);
+            //播放器播放失败监听
+            player.setOnErrorListener(videoView);
+            //设置播放类型
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            //设置进度的监听 todo ??
+            player.setOnSeekCompleteListener(videoView);
+            //设置是否一直保持屏幕开启
+            player.setScreenOnWhilePlaying(true);
+            //设置音量大小
+            player.setVolume(mVolume, mVolume);
             //设置资源文件地址
             player.setDataSource(builder.getVideoURL());
             //是否循环播放
@@ -111,25 +111,53 @@ public class ZVideoPlayMediaManager {
     /**
      * 开始播放
      *
-     * @param mp        -
      * @param videoView -
      */
-    public void start(MediaPlayer mp, ZVideoView videoView) {
-        if (mp == player) {
-            if (!mp.isPlaying()) {
-                try {
-                    mp.start();
-                } catch (Exception e) {
-                    tryAgain(videoView, e);
-                }
+    public void replay(ZVideoView videoView) {
+        if (player != null && !player.isPlaying()) {
+            try {
+                seekTo(0);
+                player.start();
+//                readyPlay(videoView, videoView.getBuilder());
+            } catch (Exception e) {
+                tryAgain(videoView, e);
             }
         }
+    }
+
+    /**
+     * 开始播放
+     *
+     * @param videoView -
+     */
+    public void start(ZVideoView videoView) {
+        if (player != null && !player.isPlaying()) {
+            try {
+                player.start();
+            } catch (Exception e) {
+                tryAgain(videoView, e);
+            }
+        }
+
     }
 
     public void pause(ZVideoView videoView) {
         if (player != null) {
             try {
                 player.pause();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void seekTo(int msec) {
+        if (player != null) {
+            try {
+                if (msec < 0) {
+                    msec = 0;
+                }
+                player.seekTo(msec);
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             }
