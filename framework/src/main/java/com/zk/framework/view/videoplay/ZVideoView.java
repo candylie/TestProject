@@ -35,6 +35,7 @@ import static com.zk.framework.view.videoplay.constant.ZVideoConstant.MEDIA_PLAY
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.NARROW_SHOW_STATE;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PAUSE_PLAY_STATE;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PLAYING_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PLAY_ERROR_MESSAGE_ACTION;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PLAY_FINISH_MESSAGE_ACTION;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PREPARING_PLAY_STATE;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.SHOW_MASK_VIEW_MESSAGE_ACTION;
@@ -141,6 +142,7 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
                     ZVideoPlayUtil.preparing(mViewShowState, ZVideoView.this);
                     break;
                 case PLAY_FINISH_MESSAGE_ACTION:
+                case PLAY_ERROR_MESSAGE_ACTION:
                     //播放器初始化
                     ZVideoPlayUtil.playCompletion(mViewShowState, ZVideoView.this);
                     break;
@@ -474,8 +476,9 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+        Log.e("zk", "onError what=" + what + ",extra=" + extra);
         //加载失败
-        ZVideoPlayUtil.playError(mViewShowState, this);
+        mHandler.handleMessage(Message.obtain(getHandler(), PLAY_ERROR_MESSAGE_ACTION));
         return false;
     }
 

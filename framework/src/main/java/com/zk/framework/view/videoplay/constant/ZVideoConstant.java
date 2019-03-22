@@ -84,8 +84,12 @@ public class ZVideoConstant {
      */
     public final static int MEDIA_PLAY_PREPARED_MESSAGE_ACTION = 5;
     /**
-     * 播放view初始化完成, 通知播放器开始初始化 的消息号
+     * 播放播放完成, 通知播放器开始初始化 的消息号
      */
     public final static int PLAY_FINISH_MESSAGE_ACTION = 6;
+    /**
+     * 播放播放出错, 通知播放器开始初始化 的消息号
+     */
+    public final static int PLAY_ERROR_MESSAGE_ACTION = 7;
 
 }
