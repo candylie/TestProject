@@ -54,7 +54,7 @@ public class ZVideoPlayMediaManager {
      * @param videoView -
      * @param builder   -
      */
-    public void readyPlay(ZVideoView videoView, ZVideoPlayControl.ZVideoParamBuilder builder) {
+    public void preparing(ZVideoView videoView, ZVideoPlayControl.ZVideoParamBuilder builder) {
         Exception exp = null;
         try {
             videoView.setPlayState(PREPARING_PLAY_STATE);
@@ -104,7 +104,7 @@ public class ZVideoPlayMediaManager {
     private void tryAgain(ZVideoView videoView, Exception e) {
         e.printStackTrace();
         //重新初始化
-        readyPlay(videoView, videoView.getBuilder());
+        preparing(videoView, videoView.getBuilder());
     }
 
 
@@ -118,7 +118,7 @@ public class ZVideoPlayMediaManager {
             try {
                 seekTo(0);
                 player.start();
-//                readyPlay(videoView, videoView.getBuilder());
+//                preparing(videoView, videoView.getBuilder());
             } catch (Exception e) {
                 tryAgain(videoView, e);
             }

@@ -2,6 +2,7 @@ package com.zk.framework.view.videoplay.i;
 
 import android.view.Surface;
 
+import com.zk.framework.view.videoplay.ZVideoView;
 import com.zk.framework.view.videoplay.util.ZVideoPlayControl;
 
 /**
@@ -18,7 +19,13 @@ public interface IZVideoPlayInstruction {
      *
      * @param builder -
      */
+    @Deprecated
     void start(ZVideoPlayControl.ZVideoParamBuilder builder);
+
+    /**
+     * 开始
+     */
+    void start();
 
     /**
      * 暂停
@@ -41,6 +48,14 @@ public interface IZVideoPlayInstruction {
      * @return -
      */
     int getPlayState();
+
+    /**
+     * 获取用户配置的相关的播放参数
+     *
+     * @param builder -
+     * @return -
+     */
+    ZVideoView setBuilder(ZVideoPlayControl.ZVideoParamBuilder builder);
 
     /**
      * 获取用户配置的相关的播放参数

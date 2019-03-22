@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -25,9 +26,17 @@ import com.zk.framework.view.videoplay.mask.IZBaseVideoFunMaskView;
 import com.zk.framework.view.videoplay.mask.ZVideoSimpleFunMaskView;
 import com.zk.framework.view.videoplay.util.ZVideoPlayControl;
 
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.CHANGE_PLAY_STATE_MESSAGE_ACTION;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.ERROR_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.FINISHED_PLAY_STATE;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.HIDE_MASK_VIEW_MESSAGE_ACTION;
-import static com.zk.framework.view.videoplay.constant.ZVideoConstant.MEDIA_PLAY_INIT_OK_MESSAGE_ACTION;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.LOADING_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.MEDIA_PLAY_PREPARING_MESSAGE_ACTION;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.NARROW_SHOW_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PAUSE_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PLAYING_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PLAY_FINISH_MESSAGE_ACTION;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PREPARING_PLAY_STATE;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.SHOW_MASK_VIEW_MESSAGE_ACTION;
 import static com.zk.framework.view.videoplay.constant.ZVideoConstant.UNINIT_PLAY_STATE;
 
@@ -91,6 +100,8 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
     private OnClickListener mChangeWindowClickCallBack;
     private SeekBar.OnSeekBarChangeListener mSeekBarChangeListener;
 
+    private GestureDetector gestureDetector;
+
     @SuppressLint("HandlerLeak")
     private class MyHandler extends Handler {
 
@@ -100,15 +111,38 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
             switch (msg.what) {
                 case HIDE_MASK_VIEW_MESSAGE_ACTION:
                     ZVideoPlayUtil.hideMaskBarView(mViewPlayState, ZVideoView.this);
-                    ZVideoPlayUtil.hideMaskStateBTView(mViewShowState, mViewPlayState, ZVideoView.this);
+                    if (mViewPlayState != PREPARING_PLAY_STATE &&
+                            mViewPlayState != PAUSE_PLAY_STATE &&
+                            mViewPlayState != FINISHED_PLAY_STATE &&
+                            mViewPlayState != LOADING_PLAY_STATE &&
+                            mViewPlayState != ERROR_PLAY_STATE) {
+                        //以上状态蒙版中的播放状态的view需要显示
+                        ZVideoPlayUtil.hideMaskStateBTView(mViewShowState, mViewPlayState, ZVideoView.this);
+                    }
                     break;
                 case SHOW_MASK_VIEW_MESSAGE_ACTION:
                     ZVideoPlayUtil.showMaskBarView(mViewShowState, mViewPlayState, ZVideoView.this);
-                    ZVideoPlayUtil.showMaskStateBTView(mViewShowState, mViewPlayState, ZVideoView.this);
+                    ZVideoPlayUtil.showMaskStateView(mViewShowState, mViewPlayState, ZVideoView.this);
                     break;
-                case MEDIA_PLAY_INIT_OK_MESSAGE_ACTION:
+                case CHANGE_PLAY_STATE_MESSAGE_ACTION:
+                    if (mViewPlayState == PLAYING_PLAY_STATE) {
+                        ZVideoPlayUtil.pause(mViewShowState, ZVideoView.this);
+                        ZVideoPlayUtil.showMaskStateView(mViewShowState, mViewPlayState, ZVideoView.this);
+                    } else if (mViewPlayState == PAUSE_PLAY_STATE) {
+                        ZVideoPlayUtil.start(mViewShowState, ZVideoView.this);
+                        delayHideMaskView();
+                    } else if (mViewPlayState == UNINIT_PLAY_STATE) {
+                        start();
+                    }
+                    //todo 当如果当前为加载中的状态的时候 如果用户双击, 这里应该保存一个操作记录,表示用户暂时不想加载完毕自动播放
+                    break;
+                case MEDIA_PLAY_PREPARING_MESSAGE_ACTION:
                     //播放器初始化
-                    ZVideoPlayUtil.readyPlay(mViewShowState, ZVideoView.this);
+                    ZVideoPlayUtil.preparing(mViewShowState, ZVideoView.this);
+                    break;
+                case PLAY_FINISH_MESSAGE_ACTION:
+                    //播放器初始化
+                    ZVideoPlayUtil.playCompletion(mViewShowState, ZVideoView.this);
                     break;
                 default:
                     break;
@@ -130,6 +164,47 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
         initFunctionMaskView(context);
         //initHandler
         mHandler = new MyHandler();
+        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener());
+        //双击监听
+        gestureDetector.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                Log.i("zk", "onSingleTapConfirmed");
+                //单击完成
+                //判断是否播放完成 如果播放完成或者播放错误 那么就不能展示功能蒙版等了
+                if (mViewPlayState == ERROR_PLAY_STATE ||
+                        mViewPlayState == FINISHED_PLAY_STATE) {
+                    return false;
+                } else {
+                    //切换蒙版展示状态
+                    if (mMaskView.isShowingBarView()) {
+                        //表示单击时间 1.显示功能面板
+                        mHandler.handleMessage(Message.obtain(getHandler(), HIDE_MASK_VIEW_MESSAGE_ACTION));
+                    } else {
+                        mHandler.handleMessage(Message.obtain(getHandler(), SHOW_MASK_VIEW_MESSAGE_ACTION));
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                Log.i("zk", "onDoubleTap");
+                //双击完成
+                if (mViewPlayState == ERROR_PLAY_STATE ||
+                        mViewPlayState == FINISHED_PLAY_STATE) {
+                    return false;
+                } else {
+                    mHandler.handleMessage(Message.obtain(getHandler(), CHANGE_PLAY_STATE_MESSAGE_ACTION));
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onDoubleTapEvent(MotionEvent e) {
+                return false;
+            }
+        });
     }
 
 
@@ -178,6 +253,7 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
      * 开始播放 但是要初始化播放器完成后才能start播放
      */
     @Override
+    @Deprecated
     public void start(ZVideoPlayControl.ZVideoParamBuilder builder) {
         if (builder == null && mBuilder != null) {
             //表示从暂停回到继续播放的状态
@@ -200,11 +276,36 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
     }
 
     /**
+     * 开始播放 但是要初始化播放器完成后才能start播放
+     */
+    @Override
+    public void start() {
+        if (mBuilder != null) {
+            if (mViewPlayState == UNINIT_PLAY_STATE) {
+                if (!isInitDisplayView) {
+                    if (mBuilder.isUserTextureView()) {
+                        initTextureView(getContext());
+                    } else {
+                        initSurfaceView(getContext());
+                    }
+                }
+            } else if (mViewPlayState == PAUSE_PLAY_STATE) {
+                ZVideoPlayUtil.start(mViewShowState, this);
+            } else {
+                Toast.makeText(getContext(), "播放器调用错误", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
      * 暂停播放
      */
     @Override
     public void pause() {
         ZVideoPlayUtil.pause(mViewShowState, this);
+        ZVideoPlayUtil.showMaskBarView(mViewShowState, PAUSE_PLAY_STATE, this);
+        //延时消失功能蒙版View
+        delayHideMaskView();
     }
 
     /**
@@ -236,6 +337,12 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
     @Override
     public ZVideoPlayControl.ZVideoParamBuilder getBuilder() {
         return mBuilder;
+    }
+
+    @Override
+    public ZVideoView setBuilder(ZVideoPlayControl.ZVideoParamBuilder builder) {
+        this.mBuilder = builder;
+        return this;
     }
 
     @Override
@@ -324,7 +431,7 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
                 mSurface = new Surface(mSurfaceTexture);
             }
             //通知初始化播放器
-            mHandler.handleMessage(Message.obtain(getHandler(), MEDIA_PLAY_INIT_OK_MESSAGE_ACTION));
+            mHandler.handleMessage(Message.obtain(getHandler(), MEDIA_PLAY_PREPARING_MESSAGE_ACTION));
         } else {
             mTextureView.setSurfaceTexture(mSurfaceTexture);
         }
@@ -362,7 +469,7 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        ZVideoPlayUtil.playCompletion(this);
+        mHandler.handleMessage(Message.obtain(getHandler(), PLAY_FINISH_MESSAGE_ACTION));
     }
 
     @Override
@@ -381,6 +488,7 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
 
     private boolean isTriggerSeekMove = false;
     private float downX, downY;
+    private long lastDownTime = 0;
 
     /**
      * 手势监听
@@ -391,6 +499,7 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 isTriggerSeekMove = false;
@@ -413,11 +522,23 @@ public class ZVideoView extends FrameLayout implements IZVideoPlayInstruction,
                 break;
             case MotionEvent.ACTION_UP:
                 //判断up-down的事件长短,并且判断是否触发了快进快退
-                long upTime = event.getEventTime();
-                if (!isTriggerSeekMove && (upTime - event.getDownTime()) < 500) {
-                    //表示单击时间 1.显示功能面板
-                    mHandler.handleMessage(Message.obtain(getHandler(), SHOW_MASK_VIEW_MESSAGE_ACTION));
-                }
+//                long upTime = event.getEventTime();
+//                if (!isTriggerSeekMove && (upTime - event.getDownTime()) < 500) {
+//                    //先判断是否是双击
+//                    if (event.getDownTime() - lastDownTime < 200) {
+//                        //表示双击 改变当前播放状态
+//                        mHandler.handleMessage(Message.obtain(getHandler(), CHANGE_PLAY_STATE_MESSAGE_ACTION));
+//                        lastDownTime = 0;
+//                    } else {
+//                        if (mMaskView.isShowingBarView()) {
+//                            //表示单击时间 1.显示功能面板
+//                            mHandler.handleMessage(Message.obtain(getHandler(), HIDE_MASK_VIEW_MESSAGE_ACTION));
+//                        } else {
+//                            mHandler.handleMessage(Message.obtain(getHandler(), SHOW_MASK_VIEW_MESSAGE_ACTION));
+//                        }
+//                        lastDownTime = event.getDownTime();
+//                    }
+//                }
                 isTriggerSeekMove = false;
                 return super.onTouchEvent(event);
             case MotionEvent.ACTION_CANCEL:

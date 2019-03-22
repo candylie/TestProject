@@ -72,7 +72,20 @@ public class ZVideoConstant {
      */
     public final static int SHOW_MASK_VIEW_MESSAGE_ACTION = 2;
     /**
+     * 改变当前播放状态
+     */
+    public final static int CHANGE_PLAY_STATE_MESSAGE_ACTION = 3;
+    /**
      * 播放view初始化完成, 通知播放器开始初始化 的消息号
      */
-    public final static int MEDIA_PLAY_INIT_OK_MESSAGE_ACTION = 3;
+    public final static int MEDIA_PLAY_PREPARING_MESSAGE_ACTION = 4;
+    /**
+     * 播放view初始化完成, 通知播放器开始初始化 的消息号
+     */
+    public final static int MEDIA_PLAY_PREPARED_MESSAGE_ACTION = 5;
+    /**
+     * 播放view初始化完成, 通知播放器开始初始化 的消息号
+     */
+    public final static int PLAY_FINISH_MESSAGE_ACTION = 6;
+
 }

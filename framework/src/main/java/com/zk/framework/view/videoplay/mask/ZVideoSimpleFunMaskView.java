@@ -12,11 +12,18 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.zk.framework.view.videoplay.i.IZVideoPlayInstruction;
-import com.zk.framework.view.videoplay.util.ZVideoPlayControl;
 
 import test.zk.com.framwork.R;
 
-import static com.zk.framework.view.videoplay.constant.ZVideoConstant.*;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.ERROR_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.FINISHED_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.FLOATING_SHOW_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.LOADING_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.MAXIMUM_SHOW_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.NARROW_SHOW_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PAUSE_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.PLAYING_PLAY_STATE;
+import static com.zk.framework.view.videoplay.constant.ZVideoConstant.UNINIT_PLAY_STATE;
 
 /**
  * -简单的默认功能蒙版View
@@ -63,6 +70,9 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
 
     private Context mContext;
 
+    private boolean isShowingBarView = true;
+    private boolean isShowingStateView = true;
+
     public ZVideoSimpleFunMaskView(@NonNull Context context) {
         this(context, null);
     }
@@ -107,6 +117,7 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
 
     @Override
     public void showBarView(int mViewShowState) {
+        isShowingBarView = true;
         if (mViewShowState == NARROW_SHOW_STATE) {
             //当前是竖屏
             showNarrowStateFunView();
@@ -121,18 +132,21 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
 
     @Override
     public void hideBarView() {
+        isShowingBarView = false;
         mTopBarView.setVisibility(GONE);
         mButtomBarView.setVisibility(GONE);
     }
 
     @Override
     public void showStateChangeButton() {
+        isShowingStateView = true;
         mPlayStateImg.setVisibility(VISIBLE);
         mPlayTipTv.setVisibility(VISIBLE);
     }
 
     @Override
     public void hideStateChangeButton() {
+        isShowingStateView = false;
         mPlayStateImg.setVisibility(GONE);
         mPlayTipTv.setVisibility(GONE);
     }
@@ -142,38 +156,37 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
         switch (nextPlayState) {
             case PLAYING_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_play_selector));
-                mPlayStateImg.setVisibility(VISIBLE);
-                mPlayTipTv.setVisibility(GONE);
                 break;
             case PAUSE_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_pause_selector));
-                mPlayStateImg.setVisibility(VISIBLE);
-                mPlayTipTv.setVisibility(GONE);
                 break;
             case FINISHED_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_replay_selector));
                 mPlayTipTv.setText(R.string.z_framework_video_replay);
-                mPlayStateImg.setVisibility(VISIBLE);
-                mPlayTipTv.setVisibility(VISIBLE);
                 break;
             case LOADING_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_loading_normal));
                 mPlayTipTv.setText(R.string.z_framework_video_loading);
-                mPlayStateImg.setVisibility(VISIBLE);
-                mPlayTipTv.setVisibility(VISIBLE);
                 break;
             case ERROR_PLAY_STATE:
                 mPlayStateImg.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_video_replay_selector));
                 mPlayTipTv.setText(R.string.z_framework_video_reloading);
-                mPlayStateImg.setVisibility(VISIBLE);
-                mPlayTipTv.setVisibility(VISIBLE);
                 break;
             default:
                 break;
         }
     }
 
-    private String pt = "http://jzvd.nathen.cn/c494b340ff704015bb6682ffde3cd302/64929c369124497593205a4190d7d128-5287d2089db37e62345123a1be272f8b.mp4";
+    @Override
+    public boolean isShowingBarView() {
+        return isShowingBarView;
+    }
+
+    @Override
+    public boolean isShowingStateView() {
+        return isShowingStateView;
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -189,11 +202,11 @@ public class ZVideoSimpleFunMaskView extends FrameLayout implements IZBaseVideoF
                 } else if (mViewPlayState == PLAYING_PLAY_STATE) {
                     mPlayInstruction.pause();
                 } else if (mViewPlayState == UNINIT_PLAY_STATE) {
-                    mPlayInstruction.start(ZVideoPlayControl.ZVideoParamBuilder.obtain().setVideoURL(pt));
+                    mPlayInstruction.start();
                 } else if (mViewPlayState == PAUSE_PLAY_STATE) {
-                    mPlayInstruction.start(null);
+                    mPlayInstruction.start();
                 } else if (mViewPlayState == ERROR_PLAY_STATE) {
-                    mPlayInstruction.start(null);
+                    mPlayInstruction.start();
                 }
             }
         } else if (v.getId() == R.id.videoView_functionMask_changeWindow_img) {

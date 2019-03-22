@@ -23,14 +23,14 @@ class ZVideoPlayUtil {
      * @param mViewShowState -当前播放界面的展示状态
      * @param videoView      -
      */
-    static void readyPlay(int mViewShowState, ZVideoView videoView) {
+    static void preparing(int mViewShowState, ZVideoView videoView) {
         //设置播放器当前播放状态
         videoView.setPlayState(PREPARING_PLAY_STATE);
+        ZVideoPlayMediaManager.obtain().preparing(videoView, videoView.getBuilder());
         showMaskBarView(mViewShowState, PREPARING_PLAY_STATE, videoView);
         //延时消失功能蒙版View
         videoView.delayHideMaskView();
         //开始播放视频
-        ZVideoPlayMediaManager.obtain().readyPlay(videoView, videoView.getBuilder());
     }
 
     /**
@@ -42,10 +42,11 @@ class ZVideoPlayUtil {
     static void start(int mViewShowState, ZVideoView videoView) {
         //设置播放器当前播放状态
         videoView.setPlayState(PLAYING_PLAY_STATE);
+        ZVideoPlayMediaManager.obtain().start(videoView);
+
         showMaskBarView(mViewShowState, PLAYING_PLAY_STATE, videoView);
         //延时消失功能蒙版View
         videoView.delayHideMaskView();
-        ZVideoPlayMediaManager.obtain().start(videoView);
     }
 
     /**
@@ -57,9 +58,6 @@ class ZVideoPlayUtil {
     static void pause(int mViewShowState, ZVideoView videoView) {
         //设置播放器当前播放状态
         videoView.setPlayState(PAUSE_PLAY_STATE);
-        showMaskBarView(mViewShowState, PAUSE_PLAY_STATE, videoView);
-        //延时消失功能蒙版View
-        videoView.delayHideMaskView();
         //开始暂停视频
         ZVideoPlayMediaManager.obtain().pause(videoView);
     }
@@ -71,12 +69,16 @@ class ZVideoPlayUtil {
      * @param videoView      -
      */
     static void replay(int mViewShowState, ZVideoView videoView) {
+        if (videoView.getPlayState() == ERROR_PLAY_STATE) {
+            ZVideoPlayMediaManager.obtain().replay(videoView);
+
+        }
         videoView.setPlayState(PLAYING_PLAY_STATE);
+        ZVideoPlayMediaManager.obtain().replay(videoView);
         hideMaskBarView(PLAYING_PLAY_STATE, videoView);
         //延时消失功能蒙版View
         videoView.delayHideMaskView();
         //开始重头播放视频
-        ZVideoPlayMediaManager.obtain().replay(videoView);
     }
 
     /**
@@ -95,9 +97,10 @@ class ZVideoPlayUtil {
      *
      * @param videoView -
      */
-    static void playCompletion(ZVideoView videoView) {
+    static void playCompletion(int mViewShowState, ZVideoView videoView) {
         videoView.setPlayState(FINISHED_PLAY_STATE);
         hideMaskBarView(FINISHED_PLAY_STATE, videoView);
+        showMaskStateView(mViewShowState, FINISHED_PLAY_STATE, videoView);
     }
 
     /**
@@ -123,13 +126,12 @@ class ZVideoPlayUtil {
      * @param mVideoPlayState -
      * @param videoView       -
      */
-    static void showMaskStateBTView(int mViewShowState, int mVideoPlayState, ZVideoView videoView) {
+    static void showMaskStateView(int mViewShowState, int mVideoPlayState, ZVideoView videoView) {
         IZBaseVideoFunMaskView maskView = videoView.getMaskView();
         if (maskView != null) {
             maskView.changePlayState(mVideoPlayState);
             maskView.showStateChangeButton();
         }
-        videoView.delayHideMaskView();
     }
 
     /**

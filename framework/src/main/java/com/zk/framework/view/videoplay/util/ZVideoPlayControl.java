@@ -1,5 +1,7 @@
 package com.zk.framework.view.videoplay.util;
 
+import com.zk.framework.view.videoplay.ZVideoView;
+
 /**
  * 供外界界面用来配置播放器的属性,然后播放的工具,对用户可见,用户的操作入口只有它
  *
@@ -7,6 +9,18 @@ package com.zk.framework.view.videoplay.util;
  * @date 2019/3/18.
  */
 public class ZVideoPlayControl {
+
+    public static void start(ZVideoView videoView, ZVideoParamBuilder builder) {
+        videoView.setBuilder(builder).start();
+    }
+
+    public static void setBuild(ZVideoView videoView, ZVideoParamBuilder builder) {
+        videoView.setBuilder(builder);
+    }
+
+    public static void start(ZVideoView videoView) {
+        videoView.start();
+    }
 
 
     public static class ZVideoParamBuilder {

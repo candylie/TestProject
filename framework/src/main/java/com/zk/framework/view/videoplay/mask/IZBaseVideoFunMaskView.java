@@ -65,5 +65,9 @@ public interface IZBaseVideoFunMaskView {
      */
     void changePlayState(int nextPlayState);
 
+    boolean isShowingBarView();
+
+    boolean isShowingStateView();
+
 
 }
