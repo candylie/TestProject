@@ -1,19 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: "config.gradle"
 
 buildscript {
-    ext.kotlin_version = '1.3.21'
-    ext.anko_sqlite = '0.10.5'
-    ext.supportLibVersion = '26.1.0'
-    ext.lifecycleVersion = '1.1.1'
-    ext.robolectricVersion = '4.0.2'
-    ext.epoxyVersion = '2.16.4'
-    ext.moshiVersion = '1.6.0'
-    ext.koinVersion = '0.9.3'
-    ext.retrofitVersion = '2.4.0'
-    ext.navVersion = '1.0.0-alpha08'
-    ext.roomVersion = '1.1.1'
-    ext.buildToolsVersion = '28.0.3'
-    ext.butterKnife = '8.4.0'
 
     repositories {
         maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
@@ -23,8 +11,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:1.3.21"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

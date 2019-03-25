@@ -1,1 +1,1 @@
-include ':app', ':framework', 'commonlibrary'
+include ':app', ':framework', ':zvideoplayer', ':screenclient', 'commonlibrary'

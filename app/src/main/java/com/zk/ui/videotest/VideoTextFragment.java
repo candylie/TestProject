@@ -2,13 +2,13 @@ package com.zk.ui.videotest;
 
 import com.zk.framework.ui.ZBaseFragment;
 import com.zk.framework.ui.mvp.ZBasePresenter;
-import com.zk.framework.view.videoplay.ZVideoView;
-import com.zk.framework.view.videoplay.util.ZVideoPlayControl;
 import com.zk.mytest.R;
 
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
+import videoplay.ZVideoView;
+import videoplay.util.ZVideoPlayControl;
 
 /**
  * -
