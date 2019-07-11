@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.zk.framework.view.videoplay.ZVideoView
+    <videoplay.ZVideoView
         android:id="@+id/test_z_video"
         android:layout_width="match_parent"
         android:layout_height="300dp" />

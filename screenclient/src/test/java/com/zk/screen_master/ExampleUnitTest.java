@@ -1,4 +1,4 @@
-package com.zk.screen_marster;
+package com.zk.screen_master;
 
 import org.junit.Test;
 

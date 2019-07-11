@@ -1,4 +1,4 @@
-package com.zk.screen_marster;
+package com.zk.screen_master;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
